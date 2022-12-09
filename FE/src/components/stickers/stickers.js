@@ -1,17 +1,19 @@
-import { isDisabled } from '@testing-library/user-event/dist/utils';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Draggable from 'react-draggable';
-import StickersAPI from '../helper/sticker.api';
+import LoginContext from '../../helper/context/context';
+import StickersAPI from '../../helper/sticker.api';
 import './stickers.css';
 
 const Stickers = () => {
 	
-	const user = "ricardo";
-	let note 
+	const {user} = useContext(LoginContext); // User logged 
+
 	const [pos, setPos] = useState({x:0,y:0}); //Mouse Coordinates
 	const [activeSticker, setActiveSticker] = useState(null) 
 	const [stickers, setStickers] = useState([]) //All Stickers
-	let isDisabled = activeSticker && user === stickers[Math.abs(activeSticker.split('sticker')[1])].user ? false : true // check if it's available to drag
+	let isDisabled = activeSticker 
+	&& user === stickers[Math.abs(activeSticker.split('sticker')[1])].user 
+	? false : true // check if it's available to drag
 	
 	//control the notes added to the sticker
 	const handleNote = (act) => {
