@@ -1,16 +1,26 @@
-import React from 'react';
+import { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Login from './components/login/login';
-import Stickers from './stickers/stickers';
+import LoginContext from "./helper/context/context";
+import Stickers from './components/stickers/stickers';
 
 
-function App() {
-  return (
-    <div className="App">
-      <Login/>
-      <Stickers/>
-      </div>
-  );
+const App = () => {
+	const [user, setUser] = useState<string>("")
+
+	return (
+		<LoginContext.Provider value={{user, setUser}}>
+			<BrowserRouter>
+				<Routes>
+					<Route path="*" element={ <Login /> } />
+					<Route path="/" element={ <Login /> } />
+					<Route path="/stickers" element={ <Stickers/>} />
+				</Routes>
+			</BrowserRouter>
+		</LoginContext.Provider>
+
+	)
 }
 
-export default App;
+export default App
