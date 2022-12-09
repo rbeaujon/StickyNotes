@@ -1,25 +1,42 @@
 import { useContext, useEffect, useState } from 'react';
-import Draggable from 'react-draggable';
+import Draggable, { DraggableEvent } from 'react-draggable';
 import LoginContext from '../../helper/context/context';
 import StickersAPI from '../../helper/sticker.api';
 import './stickers.css';
+
+type Headers = {
+	method: string,
+	header: object,
+	body: string
+}
+type MousePos = {
+	clientX: number,
+	clientY: number
+	}
+// type DraggableEventHandler = (e: Event, data: DraggableData) => void | false;
+// type DraggableData = {
+//   node: HTMLElement,
+//   // lastX + deltaX === x
+//   x: number, y: number,
+//   deltaX: number, deltaY: number,
+//   lastX: number, lastY: number
+// };
 
 const Stickers = () => {
 	
 	const {user} = useContext(LoginContext); // User logged 
 
 	const [pos, setPos] = useState({x:0,y:0}); //Mouse Coordinates
-	const [activeSticker, setActiveSticker] = useState(null) 
-	const [stickers, setStickers] = useState([]) //All Stickers
-	let isDisabled = activeSticker 
-	&& user === stickers[Math.abs(activeSticker.split('sticker')[1])].user 
+	const [activeSticker, setActiveSticker] = useState<string>("") 
+	const [stickers, setStickers] = useState<any[]>([]) //All Stickers
+	let isDisabled = activeSticker && user === stickers[Number(activeSticker.split('sticker')[1])].user 
 	? false : true // check if it's available to drag
 	
 	//control the notes added to the sticker
-	const handleNote = (act) => {
+	const handleNote = (act: string) => {
 		if(act){
-			const arrayPos = Math.abs(act.split('sticker')[1]);
-			const oldNote = stickers[arrayPos].note
+			const arrayPos = Number(act.split('sticker')[1] );
+			const oldNote = stickers && stickers[arrayPos].note
 			const addNote = prompt("Please add a note", oldNote && oldNote);
 			let newNote = [...stickers]
 			newNote[arrayPos].note = addNote
@@ -28,8 +45,8 @@ const Stickers = () => {
 		
 	  };
 	
-	// Set the mouse position for get the first sticker position
-	const mousePos = (event) => {
+	// Set mouse position for get the first sticker position
+	const mousePos = (event: MousePos) => {
 		const mouse = {
 			x: event.clientX, 
 			y: event.clientY
@@ -38,8 +55,9 @@ const Stickers = () => {
 	}
 
 	//save the last position when the sticker is dragged
-	const handleLastPositions = (data) => { 
-		stickers[Math.abs(activeSticker.split('sticker')[1])].position = {x:data.x, y:data.y}
+	const handleLastPositions = (data:DraggableEvent) => { 
+		// const {x,y} = data
+		stickers[Number(activeSticker.split('sticker')[1])].position = {}
 	}
 
 	//creates a new sticker
@@ -50,7 +68,7 @@ const Stickers = () => {
 			sticker:
 				<div id={stickerNum} className="sticker" 
 					onMouseOver={()=> setActiveSticker(stickerNum)} 
-					onMouseLeave={()=> setActiveSticker(null)}
+					onMouseLeave={()=> setActiveSticker("")}
 				>
 					<div className='user'>{user}</div>
 				</div>
@@ -64,21 +82,47 @@ const Stickers = () => {
 		setStickers(myStickers)
 	}
 
+
 	
 
-	const callAPIStickers = async () => {
-		const resp = await StickersAPI();
+	const getStickers = async () => {
+		const header: Headers = {
+			method: 'GET',
+			header: {
+			  'Accept': 'application/json',
+			  'Content-Type': 'application/json'
+			},
+			body: ""
+		  };
+		const resp = await StickersAPI(header);
 		setStickers(resp)
+	}
+
+	const saveStickers = async () => {
+		
+		const header: Headers = {
+			method: 'POST',
+			header: {
+			  'Accept': 'application/json',
+			  'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(stickers)
+		  };
+		const resp = await StickersAPI(header);
+		
 	}
 	
 	useEffect(() => {
-		callAPIStickers()
+		//getStickers()
 	}, [])
-	
+
+	useEffect(() => {
+		//saveStickers()
+	}, [stickers])
 	
 	return (
 		<div>
-			<div id="dragContainer" class="dragContainer" onMouseUp={mousePos} onClick={() => !activeSticker && newSticker()}>
+			<div id="dragContainer" className="dragContainer" onMouseUp={mousePos} onClick={() => !activeSticker && newSticker()}>
 			
 				{stickers && stickers.map(item => {
 					return (
