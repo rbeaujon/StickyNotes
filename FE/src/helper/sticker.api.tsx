@@ -1,10 +1,28 @@
-const StickersAPI = async () => {
+interface Props  {
+	method: string,
+	header: object
+}
 
-	const URL = "localhost:3001/stickers";
+const StickersAPI = async (props: Props) => {
 
-	const response = await fetch(URL);
-	const data = await response.json();
-	return data;
+	const {method, header} = props;
+
+	if(method==="GET"){
+		
+		const URL = "http://localhost:3001/stickers";
+
+		const response = await fetch(URL, header );
+		const stickers = await response.json();
+		return stickers;
+	}
+	if(method==="POST"){
+		
+		const URL = "http://localhost:3001/stickers";
+
+		const response = await fetch(URL, header);
+		const isSave = await response.json();
+		return isSave
+	}
 }
 
 export default StickersAPI

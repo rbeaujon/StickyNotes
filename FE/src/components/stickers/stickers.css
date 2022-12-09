@@ -14,12 +14,11 @@
 	position: absolute;
 	cursor: move;
 	overflow: hidden;
-	
 }
   
   .userStickers div{
 	background-color: rgb(252, 243, 139) !important;
-  }
+}
   .sticker:hover {
 	border: 2px solid gray;
 	opacity: 70%;
@@ -38,10 +37,12 @@
   
   .user {
 	border: 0px;
+	font-size: 14px;
+	text-align: center;
   }
   .note {
-	padding: 20px;
-	font-size: 1vw;
+	padding: 40px 20px;
+	font-size: 16px;
 	max-width: 150px;
 	max-height: 150px;
 	position: absolute;
