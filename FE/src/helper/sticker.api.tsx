@@ -1,17 +1,18 @@
-interface Props  {
+interface Header  {
 	method: string,
-	header: object
+	headers: HeadersInit,
+	body: string
 }
 
-const StickersAPI = async (props: Props) => {
+const StickersAPI = async (header: Header) => {
 
-	const {method, header} = props;
+	const {method} = header;
 
 	if(method==="GET"){
 		
 		const URL = "http://localhost:3001/stickers";
 
-		const response = await fetch(URL, header );
+		const response = await fetch(URL);
 		const stickers = await response.json();
 		return stickers;
 	}
@@ -20,8 +21,18 @@ const StickersAPI = async (props: Props) => {
 		const URL = "http://localhost:3001/stickers";
 
 		const response = await fetch(URL, header);
-		const isSave = await response.json();
-		return isSave
+		if (response.status === 201) {
+			const isSave = await response.json();
+			return {
+				isSave,
+				status: response.status
+			}
+
+		}else {
+			const errorResponse =[{"status":response.status}, {"error":response.statusText}]
+			return errorResponse;
+		}
+
 	}
 }
 

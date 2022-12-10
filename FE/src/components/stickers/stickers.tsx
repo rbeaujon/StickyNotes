@@ -1,30 +1,30 @@
 import { useContext, useEffect, useState } from 'react';
-import Draggable, { DraggableEvent } from 'react-draggable';
+import Draggable, {  DraggableEventHandler } from 'react-draggable';
+import { useNavigate } from 'react-router-dom';
 import LoginContext from '../../helper/context/context';
 import StickersAPI from '../../helper/sticker.api';
 import './stickers.css';
 
 type Headers = {
 	method: string,
-	header: object,
+	headers: HeadersInit,
 	body: string
 }
 type MousePos = {
 	clientX: number,
 	clientY: number
 	}
-// type DraggableEventHandler = (e: Event, data: DraggableData) => void | false;
-// type DraggableData = {
-//   node: HTMLElement,
-//   // lastX + deltaX === x
-//   x: number, y: number,
-//   deltaX: number, deltaY: number,
-//   lastX: number, lastY: number
-// };
+
 
 const Stickers = () => {
 	
 	const {user} = useContext(LoginContext); // User logged 
+
+	// Checking the user and redirect to login if doesn't have a valid user
+	const navigate = useNavigate();
+	if(user === "") {
+		navigate("/" );
+	}
 
 	const [pos, setPos] = useState({x:0,y:0}); //Mouse Coordinates
 	const [activeSticker, setActiveSticker] = useState<string>("") 
@@ -55,9 +55,12 @@ const Stickers = () => {
 	}
 
 	//save the last position when the sticker is dragged
-	const handleLastPositions = (data:DraggableEvent) => { 
-		// const {x,y} = data
-		stickers[Number(activeSticker.split('sticker')[1])].position = {}
+	const handleLastPositions:DraggableEventHandler = (e,data) => { 
+		const lastPosition = {x: data.x, y: data.y}
+		const arrayPos = Number(activeSticker.split('sticker')[1] );
+		let location = [...stickers]
+		location[arrayPos].position = lastPosition
+		setStickers(location)	
 	}
 
 	//creates a new sticker
@@ -65,14 +68,7 @@ const Stickers = () => {
 		const stickerNum = `sticker${stickers.length}`
 		let myStickers = [...stickers];
 		const obj = {
-			sticker:
-				<div id={stickerNum} className="sticker" 
-					onMouseOver={()=> setActiveSticker(stickerNum)} 
-					onMouseLeave={()=> setActiveSticker("")}
-				>
-					<div className='user'>{user}</div>
-				</div>
-			,
+			sticker: stickerNum,
 			position: pos,
 			note: "",
 			user
@@ -80,53 +76,63 @@ const Stickers = () => {
 		myStickers.push(obj);
 
 		setStickers(myStickers)
+		
 	}
-
-
-	
 
 	const getStickers = async () => {
 		const header: Headers = {
 			method: 'GET',
-			header: {
+			headers: {
 			  'Accept': 'application/json',
 			  'Content-Type': 'application/json'
 			},
-			body: ""
+			body:""
 		  };
 		const resp = await StickersAPI(header);
-		setStickers(resp)
+		if(resp.length !== 0){
+			setStickers(resp)
+		}
+		
 	}
 
-	const saveStickers = async () => {
-		
-		const header: Headers = {
-			method: 'POST',
-			header: {
-			  'Accept': 'application/json',
-			  'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(stickers)
-		  };
-		const resp = await StickersAPI(header);
-		
-	}
-	
 	useEffect(() => {
-		//getStickers()
+		getStickers()
 	}, [])
 
-	useEffect(() => {
-		//saveStickers()
-	}, [stickers])
+	useEffect(()=>{
+			
+		const saveStickers = async () => {
+		
+			const header: Headers = {
+				method: 'POST',
+				headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(stickers)
+			};
+			if(stickers.length !==0){
+				const resp = await StickersAPI(header);
+				if(resp.status === 201){
+					// Stickers saved in the Node server
+				}
+			}
+
+		}
+		saveStickers();
+	
+
+		
+	},[stickers])
 	
 	return (
 		<div>
 			<div id="dragContainer" className="dragContainer" onMouseUp={mousePos} onClick={() => !activeSticker && newSticker()}>
 			
-				{stickers && stickers.map(item => {
+				{stickers && stickers.map((item, index) => {
 					return (
 					<Draggable
+						key={index} 
 						disabled={isDisabled}
 						defaultPosition={item.position}
 						onStop={handleLastPositions}
@@ -136,8 +142,14 @@ const Stickers = () => {
 							className={`${item.user === user && "userStickers"} sticker`}
 							onDoubleClick={() => handleNote(activeSticker)} 
 						>
-							{item.sticker} 
-							<span className='note' 
+						<div id={item.sticker} className="sticker" key={item.sticker} 
+							onMouseOver={()=> setActiveSticker(item.sticker)} 
+							onMouseLeave={()=> setActiveSticker("")}
+						>
+							<div className='user'>{item.user}</div>
+						</div>
+							<span	
+								className='note' 
 								onDoubleClick={() => handleNote(activeSticker)} 
 								// onMouseOver={()=> setActiveSticker(activeSticker)} 
 								// onMouseLeave={()=> setActiveSticker(null)}
