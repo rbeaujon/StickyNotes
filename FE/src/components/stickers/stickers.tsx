@@ -66,9 +66,11 @@ const Stickers = () => {
 	//creates a new sticker
 	const newSticker = () => {
 		const stickerNum = `sticker${stickers.length}`
+		const randomColor = "#" + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0').toUpperCase();
 		let myStickers = [...stickers];
 		const obj = {
 			sticker: stickerNum,
+			color: randomColor,
 			position: pos,
 			note: "",
 			user
@@ -143,6 +145,7 @@ const Stickers = () => {
 							onDoubleClick={() => handleNote(activeSticker)} 
 						>
 						<div id={item.sticker} className="sticker" key={item.sticker} 
+							style={{ backgroundColor: item.color }}
 							onMouseOver={()=> setActiveSticker(item.sticker)} 
 							onMouseLeave={()=> setActiveSticker("")}
 						>
@@ -151,8 +154,8 @@ const Stickers = () => {
 							<span	
 								className='note' 
 								onDoubleClick={() => handleNote(activeSticker)} 
-								// onMouseOver={()=> setActiveSticker(activeSticker)} 
-								// onMouseLeave={()=> setActiveSticker(null)}
+								onMouseOver={()=> setActiveSticker(activeSticker)} 
+								onMouseLeave={()=> setActiveSticker("")}
 								
 							>{item.note}  </span>
 						</div>
