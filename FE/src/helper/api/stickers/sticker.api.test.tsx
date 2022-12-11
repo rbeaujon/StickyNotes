@@ -1,3 +1,4 @@
+import { ok } from 'assert';
 import StickerApi from './sticker.api'
 
 const mockResponse = [
@@ -25,9 +26,13 @@ const mockResponse = [
 
     
 beforeEach(() => {
-	jest.spyOn(global, 'fetch').mockResolvedValue({
+	let mySpy: jest.SpyInstance;
+	mySpy = jest.spyOn(global, 'fetch')
+
+	mySpy.mockResolvedValue({
 		json: jest.fn().mockResolvedValue(mockResponse)
 	})
+	
 });
 
 afterEach(() => {
@@ -36,7 +41,7 @@ afterEach(() => {
   
 
 describe('API Stickers Testing', () => {
-	const header = {method: 'GET'}
+	const header = {method: 'GET', body:"", headers:{}}
 	test('Should return a JSON file', async () => {
 		const json = await StickerApi(header);
 		expect(Array.isArray(json)).toEqual(true)
