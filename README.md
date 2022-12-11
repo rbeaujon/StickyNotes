@@ -12,9 +12,9 @@ The BE module is based on NodeJS using the ExpressJS framework.
 
 ## Views
 
-<img src="/assets/images/login.png" width="30%">
+<img src="/assets/images/login.png" width="60%">
 
-<img src="/assets/images/stickers.png" width="30%">
+<img src="/assets/images/stickers.png" width="60%">
 
 
 ### npm run + 
