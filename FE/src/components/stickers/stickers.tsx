@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import Draggable, {  DraggableEventHandler } from 'react-draggable';
 import { useNavigate } from 'react-router-dom';
 import LoginContext from '../../helper/context/context';
-import StickersAPI from '../../helper/sticker.api';
+import StickersAPI from '../../helper/api/stickers/sticker.api';
 import './stickers.css';
 
 type Headers = {
