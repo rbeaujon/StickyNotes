@@ -79,7 +79,7 @@ BE [http://localhost:3001]
 #### Responses
 
 * Status Code: 201
-* Status Description: "Stickers saved successful"
+* Status Description: "Stickers saved successfully"
 
 
 ## Out of scope
@@ -87,5 +87,5 @@ BE [http://localhost:3001]
     * More elegant UI.
     * Design for Mobile.
     * Improve error detection
- * More Unit Testing
- * Add another modal pop to record the note instead to use an input prompt.
+ 	* More Unit Testing
+ 	* Add another modal pop to record the note instead to use an input prompt.

@@ -39,7 +39,7 @@ app.post('/stickers', cors(), (req, res, next) => {
 	res
 		.set('Content-Type', 'application/json')
 		.status(201)
-		.json(`Stickers saved successful`)
+		.json(`Stickers saved successfully`)
 })
 
 app.listen(3001);
