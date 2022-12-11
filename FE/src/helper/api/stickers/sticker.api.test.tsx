@@ -1,4 +1,4 @@
-const StickerApi = require('./sticker.api')
+import StickerApi from './sticker.api'
 
 const mockResponse = [
 	{

@@ -36,4 +36,4 @@ const StickersAPI = async (header: Header) => {
 	}
 }
 
-module.exports = StickersAPI
+export default StickersAPI
