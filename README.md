@@ -16,8 +16,8 @@ The BE module is based on NodeJS using the ExpressJS framework.
 
 <img src="/assets/images/stickers.png" width="100%">
 
+### npm run +
 
-### npm run + 
     start: Run this script to execute the development server available for your React application.
     test:  In order to run the testing mode, using react-scripts: 5.0.1
     build: This sets and creates a build directory with a production build of your app
@@ -28,17 +28,64 @@ FE [http://localhost:3000]
 
 BE [http://localhost:3001]
 
-
 ## API Endpoints
 
-#### Stickers
+[http://localhost:3001]
 
-	[http://localhost:3001/stickers]
+### GET /stickers
 
-## Out of scopes
+#### Parameters
+ 
+ * No parameters
+
+#### Responses
+
+* Status Code: 200
+* Media type: application/json
+* Schema :
+ ```
+ {
+     sticker: string;
+     color: string;
+     position: {
+         x: number;
+         y: number;
+     };
+     note: string;
+     user: string;
+ }
+ ```
+
+### POST /stickers
+
+#### Parameters
+
+* Request body
+* Media type: application/json
+* Schema :
+ ```
+ {
+     sticker: string;
+     color: string;
+     position: {
+         x: number;
+         y: number;
+     };
+     note: string;
+     user: string;
+ }
+ ```
+
+#### Responses
+
+* Status Code: 201
+* Status Description: "Stickers saved successful"
+
+
+## Out of scope
   
     * More elegant UI.
     * Design for Mobile.
     * Improve error detection
-	* More Unit Testing
-	* Add another modal pop to record the note instead to use an input prompt.
+ * More Unit Testing
+ * Add another modal pop to record the note instead to use an input prompt.
