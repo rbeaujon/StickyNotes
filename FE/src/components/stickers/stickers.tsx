@@ -138,16 +138,19 @@ const Stickers = () => {
 						disabled={isDisabled}
 						defaultPosition={item.position}
 						onStop={handleLastPositions}
+            // onMouseDown={()=> setActiveSticker(item.sticker)} 
+            
 					>
 						
 						<div 
 							className={`${item.user === user && "userStickers"} sticker`}
 							onDoubleClick={() => handleNote(activeSticker)} 
+              onMouseOver={()=> setActiveSticker(item.sticker)} 
+              onMouseLeave={()=> setActiveSticker("")}
 						>
 						<div id={item.sticker} className="sticker" key={item.sticker} 
 							style={{ backgroundColor: item.color }}
-							onMouseOver={()=> setActiveSticker(item.sticker)} 
-							onMouseLeave={()=> setActiveSticker("")}
+							
 						>
 							<div className='user'>{item.user}</div>
 						</div>
@@ -162,7 +165,7 @@ const Stickers = () => {
 						
 					</Draggable>
 					)
-				})}
+				})} 
 			</div>
 		</div>
 		
